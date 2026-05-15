@@ -1,6 +1,6 @@
 import sys
-from utils.helpers import builtins
-from utils.commands_processors import process_type
+from .utils.helpers import builtins
+from .utils.commands_processors import process_type
 
 
 def main():
