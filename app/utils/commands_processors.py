@@ -1,6 +1,5 @@
 import os
-import sys
-from utils.helpers import builtins
+from ..utils.helpers import builtins
 
 def process_type(user_input: str):
     command_name = user_input[5:]
