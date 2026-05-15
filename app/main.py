@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 from .utils.commands_processors import process_type
@@ -17,6 +18,8 @@ def main():
             print(user_input[5:])
         elif user_input.startswith("type "):
             process_type(user_input=user_input)
+        elif user_input == "pwd":
+            print(os.getcwd())
         elif is_executable_command_in_path(user_input=user_input):
             exec_result = subprocess.run(args=user_input.split(), capture_output=True, text=True)
             sys.stdout.write(exec_result.stdout)
