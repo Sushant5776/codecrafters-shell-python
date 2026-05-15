@@ -1,13 +1,6 @@
 import sys
-
-# dict of builtin commands
-commands = {
-    "exit": lambda userInput: sys.exit(0),
-    "echo": lambda userInput: print(userInput[5:]),
-    "type": lambda userInput: print(f"{args} is a shell builtin")
-    if (args := userInput[5:]) in commands
-    else print(f"{args}: not found"),
-}
+from utils.helpers import builtins
+from utils.commands_processors import process_type
 
 
 def main():
@@ -17,12 +10,16 @@ def main():
         sys.stdout.write("$ ")
 
         # wait for user input
-        userInput = input()
-
-        if (command := userInput.split()[0]) in commands:
-            commands[command](userInput)
+        user_input = input()
+        
+        if user_input == "exit":
+            break
+        elif user_input.startswith("echo "):
+            print(user_input[5:])
+        elif user_input.startswith("type "):
+            process_type(user_input=user_input)            
         else:
-            print(f"{userInput}: command not found")
+            print(f"{user_input}: command not found")
 
 
 if __name__ == "__main__":
