@@ -20,7 +20,6 @@ def main():
         elif is_executable_command_in_path(user_input=user_input):
             exec_result = subprocess.run(args=user_input.split(), capture_output=True, text=True)
             print(exec_result.stdout)
-            print("\n")
         else:
             print(f"{user_input}: command not found")
 
