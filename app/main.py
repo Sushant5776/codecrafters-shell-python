@@ -8,7 +8,7 @@ from .utils.helpers import is_executable_command_in_path, parse_redirects, redir
 
 def main():
     readline.set_completer(command_completer)
-    readline.parse_and_bind("bind '\t' rl_complete")
+    readline.parse_and_bind("bind ' ' rl_complete")
 
     while True:
         sys.stdout.write("$ ")
