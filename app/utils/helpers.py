@@ -1,6 +1,6 @@
 import os
 
-builtins = ["echo", "type", "exit", "pwd"]
+builtins = ["echo", "type", "exit", "pwd", "cd"]
 path_sep = os.pathsep
 path_dirs = os.environ["PATH"].split(sep=path_sep)
 

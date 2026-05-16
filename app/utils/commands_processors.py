@@ -9,3 +9,11 @@ def process_type(user_input: str):
         print(f"{command_name} is {full_path}")
     else:
         print(f"{command_name}: not found")
+
+def process_cd(user_input: str):
+    directory = user_input.split()[1]
+
+    if os.path.exists(directory):
+        os.chdir(directory)
+    else:
+        print(f"cd: {directory}: No such file or directory")
