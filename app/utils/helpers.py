@@ -1,5 +1,6 @@
 import os
 import sys
+from pathlib import Path
 from contextlib import contextmanager
 
 builtins = ["echo", "type", "exit", "pwd", "cd"]
@@ -82,7 +83,25 @@ def redirect_stdout(filepath: str | None, is_append: bool = False, is_stdout: bo
 
 
 def command_completer(text: str, state: int):
-    options = [command for command in builtins if command.startswith(text)]
+    options_builtins = [command for command in builtins if command.startswith(text)]
+    options_external = set()
+
+    for directory in path_dirs:
+        dir_path = Path(directory)
+
+        if not dir_path.is_dir():
+            continue
+
+        try:
+            for entry in dir_path.iterdir():
+                if entry.name.lower().startswith(text) and os.access(entry, os.X_OK):
+                    options_external.add(entry.name)
+        except PermissionError:
+            continue
+
+
+    options = options_builtins + list(options_external)
+    options.sort()
 
     if state < len(options):
         return options[state] + " "
