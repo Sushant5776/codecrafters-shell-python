@@ -9,7 +9,9 @@ from .utils.helpers import is_executable_command_in_path, parse_redirects, redir
 def main():
     readline.set_completer(command_completer)
     readline.parse_and_bind("tab: complete")
-    
+    readline.set_completer_delims(" \t\n")
+    readline.parse_and_bind("set completion-append-character space")
+
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
