@@ -31,3 +31,5 @@ def process_external_commands(args):
     exec_result = subprocess.run(args=args, capture_output=True, text=True)
     sys.stdout.write(exec_result.stdout)
     sys.stdout.flush()
+    sys.stderr.write(exec_result.stderr)
+    sys.stderr.flush()
