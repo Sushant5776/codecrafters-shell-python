@@ -13,7 +13,10 @@ def process_type(user_input: str):
 def process_cd(user_input: str):
     directory = user_input.split()[1]
 
-    if os.path.exists(directory):
+    if directory == "~":
+        home_path = os.environ["HOME"]
+        os.chdir(home_path)
+    elif os.path.exists(directory):
         os.chdir(directory)
     else:
         print(f"cd: {directory}: No such file or directory")
