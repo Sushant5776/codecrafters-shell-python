@@ -2,7 +2,7 @@ import os
 import sys
 import shlex
 from .utils.commands_processors import process_echo, process_type, process_cd, process_external_commands
-from .utils.helpers import is_executable_command_in_path
+from .utils.helpers import is_executable_command_in_path, parse_redirects, redirect_stdout
 
 
 def main():
@@ -15,23 +15,27 @@ def main():
         if not user_input:
             continue
 
+        if user_input == "exit":
+            break
+
         args = shlex.split(user_input)
         command = args[0]
 
-        if user_input == "exit":
-            break
-        elif command == "echo":
-            process_echo(args)
-        elif command == "type":
-            process_type(args)
-        elif command == "pwd":
-            print(os.getcwd())
-        elif command == "cd":
-            process_cd(args)
-        elif is_executable_command_in_path(command):
-            process_external_commands(args)
-        else:
-            print(f"{command}: command not found")
+        clean_args, output_file, is_append = parse_redirects(args=args)
+
+        with redirect_stdout(output_file, is_append):
+            if command == "echo":
+                process_echo(args)
+            elif command == "type":
+                process_type(args)
+            elif command == "pwd":
+                print(os.getcwd())
+            elif command == "cd":
+                process_cd(args)
+            elif is_executable_command_in_path(command):
+                process_external_commands(args)
+            else:
+                print(f"{command}: command not found")
 
 
 if __name__ == "__main__":
