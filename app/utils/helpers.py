@@ -30,7 +30,7 @@ def parse_redirects(args: list[str]) -> tuple[list[str], str | None, bool]:
             output_file = args[i + 1]
             is_append = True
             i += 2
-        elif args[i] == ">" and i + 1 < len(args):
+        elif (args[i] == ">" or args[i] == "1>") and i + 1 < len(args):
             output_file = args[i + 1]
             is_append = False
             i += 2
