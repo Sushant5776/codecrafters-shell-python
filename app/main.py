@@ -29,7 +29,7 @@ def main():
             if contains_single_quote:
                 args = [arg.replace("'", "") for arg in args]
             
-            exec_result = subprocess.run(args=user_input.split(), capture_output=True, text=True)
+            exec_result = subprocess.run(args=args, capture_output=True, text=True)
             sys.stdout.write(exec_result.stdout)
             sys.stdout.flush()
         else:
