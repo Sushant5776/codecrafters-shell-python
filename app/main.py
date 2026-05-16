@@ -21,9 +21,9 @@ def main():
         args = shlex.split(user_input)
         command = args[0]
 
-        clean_args, output_file, is_append = parse_redirects(args=args)
+        clean_args, output_file, is_append, is_stdout = parse_redirects(args=args)
 
-        with redirect_stdout(output_file, is_append):
+        with redirect_stdout(output_file, is_append, is_stdout):
             if command == "echo":
                 process_echo(clean_args)
             elif command == "type":
