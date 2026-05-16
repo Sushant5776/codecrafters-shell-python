@@ -23,6 +23,7 @@ def main():
         elif user_input.startswith("cd "):
             process_cd(user_input)
         elif is_executable_command_in_path(user_input=user_input):
+            print("yes it is executable")
             args = user_input.split()
             contains_single_quote = any("'" in arg for arg in args)
 
