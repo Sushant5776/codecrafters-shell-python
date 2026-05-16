@@ -23,13 +23,13 @@ def main():
         elif user_input.startswith("cd "):
             process_cd(user_input)
         elif is_executable_command_in_path(user_input=user_input):
-            print("yes it is executable")
             args = user_input.split()
             contains_single_quote = any("'" in arg for arg in args)
 
             if contains_single_quote:
                 args = [arg.replace("'", "") for arg in args]
             
+            print(args)
             exec_result = subprocess.run(args=args, capture_output=True, text=True)
             sys.stdout.write(exec_result.stdout)
             sys.stdout.flush()
