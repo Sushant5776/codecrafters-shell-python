@@ -10,7 +10,6 @@ def main():
     readline.set_completer(command_completer)
     readline.parse_and_bind("tab: complete")
     readline.set_completer_delims(" \t\n")
-    readline.parse_and_bind("set completion-append-character space")
 
     while True:
         sys.stdout.write("$ ")
