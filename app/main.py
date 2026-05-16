@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-from .utils.commands_processors import process_type, process_cd, process_echo
+from .utils.commands_processors import process_type, process_cd, process_echo, process_external_commands
 from .utils.helpers import is_executable_command_in_path
 
 
@@ -23,16 +23,7 @@ def main():
         elif user_input.startswith("cd "):
             process_cd(user_input)
         elif is_executable_command_in_path(user_input=user_input):
-            args = user_input.split()
-            contains_single_quote = any("'" in arg for arg in args)
-
-            if contains_single_quote:
-                args = [arg.replace("'", "") for arg in args]
-            
-            print(args)
-            exec_result = subprocess.run(args=args, capture_output=True, text=True)
-            sys.stdout.write(exec_result.stdout)
-            sys.stdout.flush()
+            process_external_commands(user_input=user_input)
         else:
             print(f"{user_input}: command not found")
 

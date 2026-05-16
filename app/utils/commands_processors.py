@@ -1,4 +1,7 @@
 import os
+import sys
+import shlex
+import subprocess
 from ..utils.helpers import builtins, is_executable_command_in_path
 
 def process_type(user_input: str):
@@ -30,3 +33,11 @@ def process_echo(user_input: str):
     else:
         print_str = " ".join(user_input.split())
         print(print_str)
+
+
+def process_external_commands(user_input: str):
+    parsed_user_input = shlex.split(user_input)
+
+    exec_result = subprocess.run(args=parsed_user_input, capture_output=True, text=True)
+    sys.stdout.write(exec_result.stdout)
+    sys.stdout.flush()
