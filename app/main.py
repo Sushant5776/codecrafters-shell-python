@@ -16,7 +16,6 @@ def main():
             break
         elif user_input.startswith("echo "):
             process_echo(user_input)
-            print(user_input[5:])
         elif user_input.startswith("type "):
             process_type(user_input=user_input)
         elif user_input == "pwd":
