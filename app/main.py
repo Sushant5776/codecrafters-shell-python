@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-from .utils.commands_processors import process_type, process_cd
+from .utils.commands_processors import process_type, process_cd, process_echo
 from .utils.helpers import is_executable_command_in_path
 
 
@@ -15,6 +15,7 @@ def main():
         if user_input == "exit":
             break
         elif user_input.startswith("echo "):
+            process_echo(user_input)
             print(user_input[5:])
         elif user_input.startswith("type "):
             process_type(user_input=user_input)

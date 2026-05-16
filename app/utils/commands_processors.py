@@ -20,3 +20,13 @@ def process_cd(user_input: str):
         os.chdir(directory)
     else:
         print(f"cd: {directory}: No such file or directory")
+
+
+def process_echo(user_input: str):
+    user_input = user_input.replace("echo ", "")
+
+    if "'" in user_input:
+        print(user_input.replace("'", ""))
+    else:
+        print_str = " ".join(user_input.split())
+        print(print_str)
