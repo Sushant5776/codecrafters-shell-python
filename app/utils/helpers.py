@@ -85,6 +85,6 @@ def command_completer(text: str, state: int):
     options = [command for command in builtins if command.startswith(text)]
 
     if state < len(options):
-        return options[state]
+        return options[state] + " "
     else:
         return None
