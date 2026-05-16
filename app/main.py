@@ -25,15 +25,15 @@ def main():
 
         with redirect_stdout(output_file, is_append):
             if command == "echo":
-                process_echo(args)
+                process_echo(clean_args)
             elif command == "type":
-                process_type(args)
+                process_type(clean_args)
             elif command == "pwd":
                 print(os.getcwd())
             elif command == "cd":
-                process_cd(args)
+                process_cd(clean_args)
             elif is_executable_command_in_path(command):
-                process_external_commands(args)
+                process_external_commands(clean_args)
             else:
                 print(f"{command}: command not found")
 
