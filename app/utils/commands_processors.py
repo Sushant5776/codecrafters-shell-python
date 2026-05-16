@@ -1,11 +1,10 @@
 import os
 import sys
-import shlex
 import subprocess
 from ..utils.helpers import builtins, is_executable_command_in_path
 
-def process_type(user_input: str):
-    command_name = user_input.split()[1]  # command name to check for existing 0 is the type command itself
+def process_type(args):
+    command_name = args[1]
     if command_name in builtins:
         print(f"{command_name} is a shell builtin")
     elif full_path := is_executable_command_in_path(command_name):
@@ -13,31 +12,22 @@ def process_type(user_input: str):
     else:
         print(f"{command_name}: not found")
 
-def process_cd(user_input: str):
-    directory = user_input.split()[1]
+def process_cd(args):
+    directory = args[1]
 
     if directory == "~":
-        home_path = os.environ["HOME"]
-        os.chdir(home_path)
+        os.chdir(os.environ["HOME"])
     elif os.path.exists(directory):
         os.chdir(directory)
     else:
         print(f"cd: {directory}: No such file or directory")
 
 
-def process_echo(user_input: str):
-    user_input = user_input.replace("echo ", "")
-
-    if "'" in user_input:
-        print(user_input.replace("'", ""))
-    else:
-        print_str = " ".join(user_input.split())
-        print(print_str)
+def process_echo(args):
+    print(" ".join(args[1:]))
 
 
-def process_external_commands(user_input: str):
-    parsed_user_input = shlex.split(user_input)
-
-    exec_result = subprocess.run(args=parsed_user_input, capture_output=True, text=True)
+def process_external_commands(args):
+    exec_result = subprocess.run(args=args, capture_output=True, text=True)
     sys.stdout.write(exec_result.stdout)
     sys.stdout.flush()
