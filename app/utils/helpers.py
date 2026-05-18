@@ -136,7 +136,7 @@ def get_input():
             return buffer.strip()
         elif current_input_char == "\t":
             tab_count += 1
-            options = get_available_autocomplete_options(current_input_char)
+            options = get_available_autocomplete_options(buffer)
 
             if tab_count == 1:
                 # Ring the bell instantly!
