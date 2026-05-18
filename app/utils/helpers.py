@@ -145,8 +145,8 @@ def get_input():
 
                 if len(options) == 1:
                     sys.stdout.write("\r" + " " * len(buffer) + "\r")
-                    buffer = f"$ {options[0]} "
-                    sys.stdout.write(buffer)
+                    buffer = f"{options[0]} "
+                    sys.stdout.write(f"$ {buffer}")
                     sys.stdout.flush()
             elif tab_count == 2:
                 tab_count = 0
@@ -159,29 +159,12 @@ def get_input():
 
                 command = args[0]
 
-                options_builtins = [builtin_command for builtin_command in builtins if builtin_command.startswith(command)]
-                options_external = set()
-
-                for directory in path_dirs:
-                    dir_path = Path(directory)
-
-                    if not dir_path.is_dir():
-                        continue
-
-                    try:
-                        for entry in dir_path.iterdir():
-                            if entry.name.lower().startswith(command) and os.access(entry, os.X_OK):
-                                options_external.add(entry.name)
-                    except PermissionError:
-                        continue
-
-                options = list(set(options_builtins + list(options_external)))
-                options.sort()
+                options = get_available_autocomplete_options(command)
 
                 sys.stdout.write("\n")
                 suggestions_str = " ".join(options).strip()
                 sys.stdout.write(suggestions_str + "\n")
-                sys.stdout.write("$ " + buffer)
+                sys.stdout.write(f"$ {buffer}")
                 sys.stdout.flush()
 
         # Handle backspace or delete keys (optional but helpful in raw mode)
