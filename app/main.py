@@ -1,6 +1,6 @@
 import os
-from utils.commands_processors import process_echo, process_type, process_cd, process_external_commands
-from utils.helpers import is_executable_command_in_path, parse_redirects, redirect_stdout, get_input
+from .utils.commands_processors import process_echo, process_type, process_cd, process_external_commands
+from .utils.helpers import is_executable_command_in_path, parse_redirects, redirect_stdout, get_input
 
 
 def main():
