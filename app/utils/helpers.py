@@ -156,7 +156,7 @@ def get_input():
 
                 command = args[0]
 
-                options_builtins = [command for command in builtins if command.startswith(command)]
+                options_builtins = [command for builtin_command in builtins if builtin_command.startswith(command)]
                 options_external = set()
 
                 for directory in path_dirs:
