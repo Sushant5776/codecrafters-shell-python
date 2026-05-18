@@ -153,8 +153,8 @@ def get_input():
                 sys.stdout.flush()
 
                 if len(options) == 1:
-                    sys.stdout.write("\r" + " " * len(buffer) + "\r")
-                    buffer = f"{options[0]} "
+                    sys.stdout.write("\r\033[K")
+                    buffer = f"{options[0]} "  # might need -1 when you want to complete arguments
                     sys.stdout.write(f"$ {buffer}")
                     sys.stdout.flush()
             elif tab_count == 2:
@@ -178,12 +178,14 @@ def get_input():
 
         # Handle backspace or delete keys (optional but helpful in raw mode)
         elif current_input_char in ('\x08', '\x7f'):
+            tab_count = 0
             if len(buffer) > 0:
                 buffer = buffer[:-1]
                 # Erase character from terminal: move back, print space, move back
                 sys.stdout.write("\b \b")
                 sys.stdout.flush()
         else:
+            tab_count = 0
             buffer += current_input_char
             # We have to manually echo the character back to the screen
             # because raw mode disables automatic terminal echoing
