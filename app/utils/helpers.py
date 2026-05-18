@@ -178,7 +178,7 @@ def get_input():
                 sys.stdout.write("\n")
                 suggestions_str = " ".join(options).strip()
                 sys.stdout.write(suggestions_str + "\n")
-                sys.stdout.write("₹ " + buffer)
+                sys.stdout.write("$ " + buffer)
                 sys.stdout.flush()
 
         # Handle backspace or delete keys (optional but helpful in raw mode)
