@@ -136,7 +136,16 @@ def get_input():
             return buffer.strip()
         elif current_input_char == "\t":
             tab_count += 1
-            options = get_available_autocomplete_options(buffer)
+
+            args = shlex.split(buffer)
+
+            if not len(args):
+                tab_count = 0
+                continue
+
+            command = args[0]
+
+            options = get_available_autocomplete_options(command)
 
             if tab_count == 1:
                 # Ring the bell instantly!
