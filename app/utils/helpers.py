@@ -85,32 +85,28 @@ def redirect_stdout(filepath: str | None, is_append: bool = False, is_stdout: bo
             sys.stderr = original
 
 
-# def command_completer(text: str, state: int):
-#     options_builtins = [command for command in builtins if command.startswith(text)]
-#     options_external = set()
-#
-#     for directory in path_dirs:
-#         dir_path = Path(directory)
-#
-#         if not dir_path.is_dir():
-#             continue
-#
-#         try:
-#             for entry in dir_path.iterdir():
-#                 if entry.name.lower().startswith(text) and os.access(entry, os.X_OK):
-#                     options_external.add(entry.name)
-#         except PermissionError:
-#             continue
-#
-#
-#     options = options_builtins + list(options_external)
-#     options.sort()
-#
-#     if state < len(options):
-#         return options[state] + " "
-#     else:
-#         return None
+def get_available_autocomplete_options(command: str) -> list[str]:
+    options_builtins = [builtin_command for builtin_command in builtins if builtin_command.startswith(command)]
+    options_external = set()
 
+    for directory in path_dirs:
+        dir_path = Path(directory)
+
+        if not dir_path.is_dir():
+            continue
+
+        try:
+            for entry in dir_path.iterdir():
+                if entry.name.lower().startswith(command) and os.access(entry, os.X_OK):
+                    options_external.add(entry.name)
+        except PermissionError:
+            continue
+
+
+    options = options_builtins + list(options_external)
+    options.sort()
+
+    return options
 
 def getch():
     fd = sys.stdin.fileno()
@@ -140,10 +136,15 @@ def get_input():
             return buffer.strip()
         elif current_input_char == "\t":
             tab_count += 1
+            options = get_available_autocomplete_options(current_input_char)
 
-            if tab_count == 1:
+            if tab_count == 1 and len(options) > 1:
                 # Ring the bell instantly!
                 sys.stdout.write("\x07")
+                sys.stdout.flush()
+            elif tab_count == 1 and len(options) == 1:
+                sys.stdout.write("\r" + " " * len(buffer) + "\r")
+                sys.stdout.write(f"$ {options[0]} ")
                 sys.stdout.flush()
             elif tab_count == 2:
                 tab_count = 0
@@ -156,7 +157,7 @@ def get_input():
 
                 command = args[0]
 
-                options_builtins = [command for builtin_command in builtins if builtin_command.startswith(command)]
+                options_builtins = [builtin_command for builtin_command in builtins if builtin_command.startswith(command)]
                 options_external = set()
 
                 for directory in path_dirs:
