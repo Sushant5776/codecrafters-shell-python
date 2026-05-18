@@ -103,7 +103,7 @@ def get_available_autocomplete_options(command: str) -> list[str]:
             continue
 
 
-    options = options_builtins + list(options_external)
+    options = list(set(options_builtins + list(options_external)))
     options.sort()
 
     return options
