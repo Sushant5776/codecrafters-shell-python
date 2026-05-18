@@ -1,20 +1,14 @@
 import os
-import sys
-import shlex
-import readline
-from .utils.commands_processors import process_echo, process_type, process_cd, process_external_commands
-from .utils.helpers import is_executable_command_in_path, parse_redirects, redirect_stdout, command_completer
+from utils.commands_processors import process_echo, process_type, process_cd, process_external_commands
+from utils.helpers import is_executable_command_in_path, parse_redirects, redirect_stdout, get_input
 
 
 def main():
-    readline.set_completer(command_completer)
-    readline.parse_and_bind("tab: complete")
+    buffer = ""
+    tab_count = 0
 
     while True:
-        sys.stdout.write("$ ")
-        sys.stdout.flush()
-
-        user_input = input()
+        user_input = get_input()
 
         if not user_input:
             continue

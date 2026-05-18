@@ -1,5 +1,8 @@
 import os
 import sys
+import shlex
+import tty
+import termios
 from pathlib import Path
 from contextlib import contextmanager
 
@@ -82,28 +85,112 @@ def redirect_stdout(filepath: str | None, is_append: bool = False, is_stdout: bo
             sys.stderr = original
 
 
-def command_completer(text: str, state: int):
-    options_builtins = [command for command in builtins if command.startswith(text)]
-    options_external = set()
+# def command_completer(text: str, state: int):
+#     options_builtins = [command for command in builtins if command.startswith(text)]
+#     options_external = set()
+#
+#     for directory in path_dirs:
+#         dir_path = Path(directory)
+#
+#         if not dir_path.is_dir():
+#             continue
+#
+#         try:
+#             for entry in dir_path.iterdir():
+#                 if entry.name.lower().startswith(text) and os.access(entry, os.X_OK):
+#                     options_external.add(entry.name)
+#         except PermissionError:
+#             continue
+#
+#
+#     options = options_builtins + list(options_external)
+#     options.sort()
+#
+#     if state < len(options):
+#         return options[state] + " "
+#     else:
+#         return None
 
-    for directory in path_dirs:
-        dir_path = Path(directory)
 
-        if not dir_path.is_dir():
-            continue
-
-        try:
-            for entry in dir_path.iterdir():
-                if entry.name.lower().startswith(text) and os.access(entry, os.X_OK):
-                    options_external.add(entry.name)
-        except PermissionError:
-            continue
+def getch():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd=fd)
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
 
 
-    options = options_builtins + list(options_external)
-    options.sort()
+def get_input():
+    buffer = ""
+    tab_count = 0
 
-    if state < len(options):
-        return options[state] + " "
-    else:
-        return None
+    sys.stdout.write("$ ")
+    sys.stdout.flush()
+
+    while True:
+        current_input_char = getch()
+
+        # In raw mode, Enter is often read as '\r' (carriage return)
+        if current_input_char in ('\n', '\r'):
+            # Move to a new line before printing the final buffer
+            sys.stdout.write("\n")
+            return buffer.strip()
+        elif current_input_char == "\t":
+            tab_count += 1
+
+            if tab_count == 1:
+                # Ring the bell instantly!
+                sys.stdout.write("\x07")
+                sys.stdout.flush()
+            elif tab_count == 2:
+                tab_count = 0
+
+                args = shlex.split(buffer)
+
+                if not len(args):
+                    tab_count = 0
+                    continue
+
+                command = args[0]
+
+                options_builtins = [command for command in builtins if command.startswith(command)]
+                options_external = set()
+
+                for directory in path_dirs:
+                    dir_path = Path(directory)
+
+                    if not dir_path.is_dir():
+                        continue
+
+                    try:
+                        for entry in dir_path.iterdir():
+                            if entry.name.lower().startswith(command) and os.access(entry, os.X_OK):
+                                options_external.add(entry.name)
+                    except PermissionError:
+                        continue
+
+                options = list(set(options_builtins + list(options_external)))
+                options.sort()
+
+                sys.stdout.write("\n")
+                suggestions_str = " ".join(options).strip()
+                sys.stdout.write(suggestions_str + "\n")
+                sys.stdout.write("₹ " + buffer)
+                sys.stdout.flush()
+
+        # Handle backspace or delete keys (optional but helpful in raw mode)
+        elif current_input_char in ('\x08', '\x7f'):
+            if len(buffer) > 0:
+                buffer = buffer[:-1]
+                # Erase character from terminal: move back, print space, move back
+                sys.stdout.write("\b \b")
+                sys.stdout.flush()
+        else:
+            buffer += current_input_char
+            # We have to manually echo the character back to the screen
+            # because raw mode disables automatic terminal echoing
+            sys.stdout.write(current_input_char)
+            sys.stdout.flush()

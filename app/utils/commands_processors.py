@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-from ..utils.helpers import builtins, is_executable_command_in_path
+from utils.helpers import builtins, is_executable_command_in_path
 
 def process_type(args):
     command_name = args[1]
