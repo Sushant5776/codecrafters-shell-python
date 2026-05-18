@@ -138,14 +138,16 @@ def get_input():
             tab_count += 1
             options = get_available_autocomplete_options(current_input_char)
 
-            if tab_count == 1 and len(options) > 1:
+            if tab_count == 1:
                 # Ring the bell instantly!
                 sys.stdout.write("\x07")
                 sys.stdout.flush()
-            elif tab_count == 1 and len(options) == 1:
-                sys.stdout.write("\r" + " " * len(buffer) + "\r")
-                sys.stdout.write(f"$ {options[0]} ")
-                sys.stdout.flush()
+
+                if len(options) == 1:
+                    sys.stdout.write("\r" + " " * len(buffer) + "\r")
+                    buffer = f"$ {options[0]} "
+                    sys.stdout.write(buffer)
+                    sys.stdout.flush()
             elif tab_count == 2:
                 tab_count = 0
 
