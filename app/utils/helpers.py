@@ -139,9 +139,9 @@ def get_input():
 
             args = shlex.split(buffer)
 
-            if not len(args):
-                tab_count = 0
-                continue
+            # if not len(args):
+            #     tab_count = 0
+            #     continue
 
             command = args[0]
 
