@@ -150,15 +150,16 @@ def get_input():
             if tab_count == 1:
                 # Ring the bell instantly!
                 sys.stdout.write("\x07")
+                sys.stdout.flush()
 
                 if len(options) == 1:
                     buffer = f"{options[0]} "  # might need -1 when you want to complete arguments
 
                     sys.stdout.write("\r\033[K")
                     sys.stdout.write(f"$ {buffer}")
+                    sys.stdout.flush()
                     tab_count = 0
 
-                sys.stdout.flush()
             elif tab_count == 2:
                 tab_count = 0
 
