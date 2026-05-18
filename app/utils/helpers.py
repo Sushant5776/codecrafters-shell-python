@@ -189,5 +189,6 @@ def get_input():
             buffer += current_input_char
             # We have to manually echo the character back to the screen
             # because raw mode disables automatic terminal echoing
-            sys.stdout.write(current_input_char)
+            sys.stdout.write("\r\033[K")
+            sys.stdout.write(f"$ {buffer}")
             sys.stdout.flush()
