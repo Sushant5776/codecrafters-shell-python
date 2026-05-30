@@ -120,6 +120,8 @@ def getch():
     return ch
 
 def find_longest_common_prefix(options: List[str]) -> str:
+    if not len(options): return ""
+    
     prefix = options[0]
 
     i = 0
