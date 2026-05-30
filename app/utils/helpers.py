@@ -186,7 +186,7 @@ def get_input():
                     sys.stdout.write(f"$ {prefix}")
                     sys.stdout.flush()
                 
-                tab_count = 0
+                # tab_count = 0
 
             elif tab_count == 2:
                 tab_count = 0
@@ -202,7 +202,7 @@ def get_input():
                 options = get_available_autocomplete_options(command)
 
                 sys.stdout.write("\n")
-                suggestions_str = " ".join(options).strip()
+                suggestions_str = "  ".join(options).strip()
                 sys.stdout.write(suggestions_str + "\n")
                 sys.stdout.write(f"$ {buffer}")
                 sys.stdout.flush()
