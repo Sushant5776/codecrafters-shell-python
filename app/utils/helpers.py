@@ -184,6 +184,7 @@ def get_input():
                     # clear the screen
                     sys.stdout.write("\r\033[K")
                     sys.stdout.write(f"$ {prefix}")
+                    sys.stdout.flush()
                 
                 tab_count = 0
 
