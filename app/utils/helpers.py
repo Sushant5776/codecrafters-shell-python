@@ -5,6 +5,7 @@ import tty
 import termios
 from pathlib import Path
 from contextlib import contextmanager
+from typing import List
 
 builtins = ["echo", "type", "exit", "pwd", "cd"]
 path_sep = os.pathsep
@@ -118,6 +119,24 @@ def getch():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
+def find_longest_common_prefix(options: List[str]) -> str:
+    prefix = options[0]
+
+    i = 0
+
+    while i  < len(options):
+        if prefix == "":
+            break
+
+        temp = options[i]
+
+        while len(prefix) and not temp.startswith(prefix):
+            prefix = prefix[:-1]
+        
+        i += 1
+
+    return prefix
+
 
 def get_input():
     buffer = ""
@@ -139,9 +158,9 @@ def get_input():
 
             args = shlex.split(buffer)
 
-            # if not len(args):
-            #     tab_count = 0
-            #     continue
+            if not len(args):
+                tab_count = 0
+                continue
 
             command = args[0]
 
@@ -158,7 +177,15 @@ def get_input():
                     sys.stdout.write("\r\033[K")
                     sys.stdout.write(f"$ {buffer}")
                     sys.stdout.flush()
-                    tab_count = 0
+                else:
+                    # autocomplete longest common prefix
+                    prefix = find_longest_common_prefix(options)
+                    buffer = prefix
+                    # clear the screen
+                    sys.stdout.write("\r\033[K")
+                    sys.stdout.write(f"$ {prefix}")
+                
+                tab_count = 0
 
             elif tab_count == 2:
                 tab_count = 0
