@@ -162,7 +162,7 @@ def get_input():
                 tab_count = 0
                 continue
 
-            command = args[0]
+            command = args[-1]
 
             options = get_available_autocomplete_options(command)
 
